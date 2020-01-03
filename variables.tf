@@ -126,14 +126,8 @@ variable "vpc_cidr_block" {
 
 variable "cidr_blocks" {
   description = "The CIDR blocks to create the workstations in."
-  default     = ["10.1.1.0/24", "10.1.2.0/24"]
+  default     = ["10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24"]
 }
-
-variable "zone_id" {
-  description = "The CIDR blocks to create the workstations in."
-  default     = ""
-}
-
 
 variable "public_key" {
   description = "The contents of the SSH public key to use for connecting to the cluster."
@@ -203,9 +197,9 @@ variable "host_access_ip" {
 
 variable "primary_datacenter" {
   description = "the primary datacenter for mesh gateways"
-  default = ""
+  default     = ""
 }
 variable "module_version" {
   description = "the primary datacenter for mesh gateways"
-  default = "0.0.2"
+  default     = "0.0.2"
 }

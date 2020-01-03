@@ -60,6 +60,14 @@ output "Primary_workers_Nodes" {
   value = module.primarycluster.workers
 }
 
+output "Primary_nomad_tag_workers" {
+  value = module.primarycluster.nomad_tag_workers
+}
+
+output "Primary_nomad_tag_servers" {
+  value = module.primarycluster.nomad_tag_servers
+}
+
 
 // Secondary
 
@@ -84,6 +92,14 @@ output "Secondary_servers_nodes" {
 }
 output "Secondary_workers_Nodes" {
   value = module.secondarycluster.workers
+}
+
+output "Secondary_nomad_tag_workers" {
+  value = module.secondarycluster.nomad_tag_workers
+}
+
+output "Secondary_nomad_tag_servers" {
+  value = module.secondarycluster.nomad_tag_servers
 }
 
 // Tertiary

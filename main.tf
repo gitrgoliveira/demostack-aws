@@ -11,11 +11,6 @@ terraform {
   }
 }
 
-locals {
-  demostack  = "git::https://github.com/GuyBarros/terraform-aws-demostack.git"
-}
-
-
 # // Workspace Data
 data "terraform_remote_state" "emea_se_playground_tls_root_certificate" {
   backend = "remote"
@@ -29,20 +24,21 @@ data "terraform_remote_state" "emea_se_playground_tls_root_certificate" {
   } //config
 }
 
+data "terraform_remote_state" "dns" {
+  backend = "remote"
+
+  config = {
+    hostname     = "app.terraform.io"
+    organization = "emea-se-playground-2019"
+    workspaces = {
+      name = "ricardo-dns"
+    }
+  } //network
+}
 # //--------------------------------------------------------------------
 
-provider "aws" {
-  version = ">= 1.20.0"
-  region  = var.primary_region
-}
-
-# module "dns-multicloud" {
-#   source              = "git::https://github.com/lhaig/dns-multicloud.git?ref=v1.1"
-# }
-
-
 module "primarycluster" {
-  source               = "git::https://github.com/GuyBarros/terraform-aws-demostack.git//modules?ref=v0.0.3"
+  source               = "git::https://github.com/GuyBarros/terraform-aws-demostack.git//modules"
   owner                = var.owner
   region               = var.primary_region
   namespace            = var.primary_namespace
@@ -67,7 +63,7 @@ module "primarycluster" {
   cidr_blocks          = var.cidr_blocks
   instance_type_server = var.instance_type_server
   instance_type_worker = var.instance_type_worker
-  zone_id              = var.zone_id
+  zone_id              = "${data.terraform_remote_state.dns.outputs.aws_sub_zone_id}"
   run_nomad_jobs       = var.run_nomad_jobs
   host_access_ip       = var.host_access_ip
   primary_datacenter   = var.primary_datacenter
@@ -84,7 +80,7 @@ module "primarycluster" {
 
 
 module "secondarycluster" {
-  source               = "git::https://github.com/GuyBarros/terraform-aws-demostack.git//modules?ref=v0.0.3"
+  source               = "git::https://github.com/GuyBarros/terraform-aws-demostack.git//modules"
   owner                = var.owner
   region               = var.secondary_region
   namespace            = var.secondary_namespace
@@ -109,7 +105,7 @@ module "secondarycluster" {
   cidr_blocks          = var.cidr_blocks
   instance_type_server = var.instance_type_server
   instance_type_worker = var.instance_type_worker
-  zone_id              = var.zone_id
+  zone_id              = "${data.terraform_remote_state.dns.outputs.aws_sub_zone_id}"
   run_nomad_jobs       = var.run_nomad_jobs
   host_access_ip       = var.host_access_ip
   primary_datacenter   = var.primary_datacenter
@@ -126,7 +122,7 @@ module "secondarycluster" {
 
 # /*
 # module "tertiarycluster" {
-#   source               = "git::https://github.com/GuyBarros/terraform-aws-demostack.git//modules?ref=v0.0.3"
+#   source               = "git::https://github.com/GuyBarros/terraform-aws-demostack.git//modules"
 #   owner                = var.owner
 #   region              = var.tertiary_region
 #   namespace           = var.tertiary_namespace
@@ -151,7 +147,7 @@ module "secondarycluster" {
 #   cidr_blocks          = var.cidr_blocks
 #   instance_type_server = var.instance_type_server
 #   instance_type_worker = var.instance_type_worker
-#   zone_id            = var.zone_id
+#   zone_id              = data.terraform_remote_state.dns.outputs.aws_sub_zone_id
 #   run_nomad_jobs       = var.run_nomad_jobs
 #   host_access_ip       = var.host_access_ip
 
