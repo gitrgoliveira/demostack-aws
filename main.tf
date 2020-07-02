@@ -38,7 +38,8 @@ data "terraform_remote_state" "dns" {
 # //--------------------------------------------------------------------
 
 module "primarycluster" {
-  source               = "git::https://github.com/GuyBarros/terraform-aws-demostack.git//modules"
+  source               = "git::https://github.com/GuyBarros/terraform-aws-demostack.git//modules?ref=v0.0.5"
+  # source               = "git::https://github.com/GuyBarros/terraform-aws-demostack.git//modules"
   owner                = var.owner
   region               = var.primary_region
   namespace            = var.primary_namespace
@@ -47,6 +48,7 @@ module "primarycluster" {
   workers              = var.workers
   vaultlicense         = var.vaultlicense
   consullicense        = var.consullicense
+  nomadlicense         = var.nomadlicense
   enterprise           = var.enterprise
   consul_url           = var.consul_url
   consul_ent_url       = var.consul_ent_url
@@ -80,7 +82,8 @@ module "primarycluster" {
 
 
 module "secondarycluster" {
-  source               = "git::https://github.com/GuyBarros/terraform-aws-demostack.git//modules"
+  # source               = "git::https://github.com/GuyBarros/terraform-aws-demostack.git//modules"
+  source               = "git::https://github.com/GuyBarros/terraform-aws-demostack.git//modules?ref=v0.0.5"
   owner                = var.owner
   region               = var.secondary_region
   namespace            = var.secondary_namespace
@@ -89,6 +92,7 @@ module "secondarycluster" {
   workers              = var.workers
   vaultlicense         = var.vaultlicense
   consullicense        = var.consullicense
+  nomadlicense         = var.nomadlicense
   enterprise           = var.enterprise
   consul_url           = var.consul_url
   consul_ent_url       = var.consul_ent_url
